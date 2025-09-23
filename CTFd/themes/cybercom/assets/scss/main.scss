@@ -1,0 +1,120 @@
+@use "bootstrap/scss/bootstrap" as * with (
+  $primary: #1f6feb,
+  $secondary: #0d1117,
+  $info: #58a6ff,
+  $body-bg: #0d1117,
+  $body-color: #c9d1d9,
+  $link-color: #58a6ff,
+  $link-hover-color: #1f6feb,
+  $font-family-base: "Courier New", Courier, monospace;
+);
+
+/* === Import Components === */
+@use "includes/components/table";
+@use "includes/components/jumbotron";
+@use "includes/components/challenge";
+@use "includes/components/sticky-footer";
+@use "includes/components/graphs";
+
+/* === Import Utilities === */
+@use "includes/utils/fonts";
+@use "includes/utils/opacity";
+@use "includes/utils/min-height";
+@use "includes/utils/cursors";
+@use "includes/utils/lolight";
+python3 -m venv venv
+/* === Global Styles === */
+body {
+  background-color: $body-bg;
+  color: $body-color;
+  font-family: $font-family-base;
+  background: url('../img/background.gif') no-repeat center center fixed;
+  background-size: cover;
+}
+
+a {
+  color: $link-color !important;
+  text-decoration: none !important;
+
+  &:hover {
+    color: $link-hover-color !important;
+    text-decoration: underline;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-family-base;
+  font-weight: 500;
+  color: $body-color;
+}
+
+/* === Navbar === */
+.navbar, .dropdown-menu {
+  background-color: $primary !important;
+}
+
+.navbar-nav .nav-link {
+  color: #ffffff !important;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+  background-color: lighten($primary, 10%) !important;
+  color: #ffffff !important;
+}
+
+/* === Buttons === */
+.btn-primary {
+  background-color: $primary;
+  border-color: $primary;
+
+  &:hover {
+    background-color: lighten($primary, 10%);
+    border-color: lighten($primary, 10%);
+  }
+}
+
+/* === Tables === */
+.table {
+  background-color: $secondary;
+  color: $body-color;
+
+  thead {
+    background-color: $primary;
+    color: #ffffff;
+  }
+
+  tbody tr:nth-of-type(odd) {
+    background-color: darken($secondary, 3%);
+  }
+
+  tbody tr:nth-of-type(even) {
+    background-color: $secondary;
+  }
+}
+
+/* === Badges === */
+.badge {
+  background-color: $primary !important;
+  color: #ffffff;
+}
+
+/* === Cards & Jumbotron === */
+.card, .jumbotron, .container {
+  background-color: $secondary;
+  color: $body-color;
+  border-radius: 0.5rem;
+}
+
+/* === Footer === */
+footer.footer {
+  background-color: $secondary;
+  color: $body-color;
+  padding: 1rem 0;
+  text-align: center;
+}
+
+/* === Spinner === */
+.spinner {
+  color: $primary !important;
+}

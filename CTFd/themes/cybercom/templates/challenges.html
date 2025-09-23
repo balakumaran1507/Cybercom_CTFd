@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="jumbotron">
+    <div class="container">
+      <h1 class="challenge-heading">
+        {% trans %}Challenges{% endtrans %}
+      </h1>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        {% include "components/errors.html" %}
+      </div>
+    </div>
+
+    <div 
+      x-data="ChallengeBoard" 
+      @load-challenges.window="loadChallenges()" 
+      @load-challenge.window="loadChallenge($event.detail)"
+    >
+      <div
+          x-ref="challengeWindow" id="challenge-window" class="modal fade" tabindex="-1" role="dialog" x-data=""
+          x-html="$store.challenge.data.view"
+      ></div>
+
+      <div x-show="!loaded">
+        <div class="min-vh-50 d-flex align-items-center">
+          <div class="text-center w-100">
+            <i class="fas fa-circle-notch fa-spin fa-3x fa-fw spinner"></i>
+          </div>
+        </div>
+      </div>
+
+      <div x-show="loaded">
+        <template x-for="(category, idx) in getCategories()" :key="idx">
+          <div class="pt-5">
+            <div class="category-header mb-3">
+              <h3 x-text="category"></h3>
+            </div>
+
+            <div class="category-challenges d-flex flex-column">
+              <div class="challenges-row row">
+                <template x-for="(c, idx) in getChallenges(category)" :key="c.id">
+                  <div class="col-sm-6 col-md-4 col-lg-3 my-3">
+                    <button
+                        class="challenge-button btn btn-dark w-100 h-100"
+                        :class="[
+                          c.solved_by_me ? 'challenge-solved' : '',
+                          ...c.tags.map((tag) => `tag-${tag.value.replace(/ /g, '-')}`),
+                        ]"
+                        :value="c.id" @click="loadChallenge(c.id)"
+                    >
+                      <div class="challenge-inner my-3">
+                        <p x-text="c.name"></p>
+                        <span x-text="c.value"></span>
+                      </div>
+                    </button>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ Assets.js("assets/js/challenges.js") }}
+{% endblock %}
+
+{% block styles %}
+<style>
+/* Global Cyber font */
+h1, h3,
+.challenge-button,
+.challenge-inner p,
+.challenge-inner span,
+.category-header h3 {
+    font-family: 'Cyber', sans-serif;
+    letter-spacing: 1px;
+}
+
+/* Page title */
+h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-align: center;
+    color: #0ff;
+    text-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
+    margin-bottom: 2rem;
+}
+
+/* Category header */
+.category-header h3 {
+    color: #00e5ff;
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.8);
+    border-left: 4px solid #0ff;
+    padding-left: 14px;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+/* Neon accent line below each category */
+.category-header h3::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: #0ff;
+    box-shadow: 0 0 6px rgba(0, 255, 255, 0.8);
+}
+
+/* Challenge card/button */
+.challenge-button {
+    background: #0a0a0a;
+    border: 2px solid #0ff;
+    border-radius: 14px;
+    padding: 1.2rem;
+    min-height: 140px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle glow border hover */
+.challenge-button:hover {
+    background: #111;
+    border-color: #00e5ff;
+    transform: translateY(-5px);
+    box-shadow: 0 0 18px rgba(0, 255, 255, 0.7);
+}
+
+/* Inner glow effect */
+.challenge-button::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: inherit;
+    background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.15), transparent);
+    pointer-events: none;
+}
+
+/* Challenge name */
+.challenge-inner p {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin: 0;
+    color: #0ff;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+}
+
+/* Challenge value */
+.challenge-inner span {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #66d9ff;
+    display: block;
+    margin-top: 0.5rem;
+    text-shadow: 0 0 6px rgba(102, 217, 255, 0.5);
+}
+
+/* Solved challenge state */
+.challenge-solved {
+    background: linear-gradient(135deg, #002222, #004444);
+    border-color: #33ffcc;
+    box-shadow: 0 0 16px rgba(51, 255, 204, 0.7);
+}
+
+.challenge-solved .challenge-inner p {
+    color: #33ffcc;
+    text-shadow: 0 0 8px rgba(51, 255, 204, 0.8);
+}
+</style>
+
+
+{% endblock %}
